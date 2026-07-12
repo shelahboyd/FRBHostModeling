@@ -18,10 +18,11 @@ def measure_photometry(
     ann_a_in,
     ann_a_out,
     theta,
+    filt,
     save_image=False):
     
     '''
-    Perform elliptical aperture photometry on a Pan-STARRS image in the r-band
+    Perform elliptical aperture photometry on a Pan-STARRS image in a specified filter
        
     Parameters
        -----------
@@ -39,10 +40,12 @@ def measure_photometry(
         semimajor axis of annulus (inner) in arcsec
     ann_a_out: float
         semimajor axis of annulus (outer) in arcsec
-   
-       
+        
     theta: float
-        angle of ellipse aperture and annulus in deg
+        angle of ellipse aperture and annulus in deg from DS9
+
+    filt: string
+        filter of the image (r, g, i, y, z)
 
     save_image: bool
         if True, saves Pan-STARRS image as fits file
@@ -54,7 +57,7 @@ def measure_photometry(
     galaxy = Pan_STARRS_Survey(coord=coord, radius=10*u.arcsec)
 
     #fits file 50''
-    image = galaxy.get_image(imsize=250*u.arcsec, filt='r', timeout=120)
+    image = galaxy.get_image(imsize=250*u.arcsec, filt=filt, timeout=120)
     
     if save_image:
         fits.HDUList([image]).writeto('galaxy.fits', overwrite=True) 
@@ -133,7 +136,7 @@ def measure_photometry(
     #compute raw Flux
     raw_flux = source_sum -(aperture_area*mean_annulus)
 
-    #raw magnitude in r-band
+    #raw magnitude
     mag_inst = -2.5*(np.log10(raw_flux/exptime)) #divided raw/flux by exptime 
 
     #calibrate magnitude with ZP
