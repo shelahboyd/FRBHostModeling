@@ -149,7 +149,7 @@ def measure_photometry(
     return mag_calibrated
 
 #MULTIBAND PHOTOMETRY     
-def measure_multiband_photometry(
+def multiband_photometry(
     ra,
     dec,
     imsize,
