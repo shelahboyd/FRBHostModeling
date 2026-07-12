@@ -22,7 +22,7 @@ def measure_photometry(
     save_image=False):
     
     '''
-    Perform elliptical aperture photometry on a Pan-STARRS image
+    Perform elliptical aperture photometry on a Pan-STARRS image in the r-band
        
     Parameters
        -----------
