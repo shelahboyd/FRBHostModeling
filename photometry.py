@@ -17,7 +17,6 @@ def measure_photometry(
     aper_b,
     ann_a_in,
     ann_a_out,
-    ann_b_out,
     theta,
     save_image=False):
     
@@ -40,8 +39,7 @@ def measure_photometry(
         semimajor axis of annulus (inner) in arcsec
     ann_a_out: float
         semimajor axis of annulus (outer) in arcsec
-    ann_b_out: float
-        semiminor axis of annulus (outer) in arcsec
+   
        
     theta: float
         angle of ellipse aperture and annulus in deg
@@ -105,7 +103,7 @@ def measure_photometry(
 #--------------------------------------------
     #semi major and semiminor axises for annulus
     a_out = ann_a_out
-    b_out = ann_b_out
+    b_out = (b/a) *a_out
     a_in = ann_a_in
     b_in = (b/a) * a_in
 
