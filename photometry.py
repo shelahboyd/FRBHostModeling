@@ -219,6 +219,6 @@ def multiband_photometry(
             save_image=save_image
         )
 
-        magnitudes[filt] = mag
+        magnitudes[filt] = float(mag)
 
     return magnitudes   
