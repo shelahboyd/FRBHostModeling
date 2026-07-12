@@ -13,6 +13,7 @@ from astropy.io import fits
 def measure_photometry(
     ra,
     dec,
+    imsize,
     aper_a,
     aper_b,
     ann_a_in,
@@ -30,7 +31,10 @@ def measure_photometry(
         right ascension in degrees
     dec: float
         declination in degrees
-       
+
+    imsize: float
+        size of image cutout in arcsec
+        
     aper_a : float
         semimajor axis of aperture in arcsec
     aper_b: float
@@ -56,8 +60,8 @@ def measure_photometry(
     #search Pan-STARRS for galaxy within a 10'' radius
     galaxy = Pan_STARRS_Survey(coord=coord, radius=10*u.arcsec)
 
-    #fits file 50''
-    image = galaxy.get_image(imsize=250*u.arcsec, filt=filt, timeout=120)
+    #downlaod image
+    image = galaxy.get_image(imsize=imsize*u.arcsec, filt=filt, timeout=120)
     
     if save_image:
         fits.HDUList([image]).writeto('galaxy.fits', overwrite=True) 
@@ -137,7 +141,7 @@ def measure_photometry(
     raw_flux = source_sum -(aperture_area*mean_annulus)
 
     #raw magnitude
-    mag_inst = -2.5*(np.log10(raw_flux/exptime)) #divided raw/flux by exptime 
+    mag_inst = -2.5*(np.log10(raw_flux/exptime)) #divided raw_flux by exptime 
 
     #calibrate magnitude with ZP
     mag_calibrated = zp+mag_inst
