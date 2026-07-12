@@ -9,7 +9,7 @@ from photutils.aperture import SkyEllipticalAnnulus
 import numpy as np
 from astropy.io import fits
 
-
+#SINGLE BAND PHOTOMETRY
 def measure_photometry(
     ra,
     dec,
@@ -49,7 +49,7 @@ def measure_photometry(
         angle of ellipse aperture and annulus in deg from DS9
 
     filt: string
-        filter of the image (r, g, i, y, z)
+        filter of the image (g, r, i, z, y)
 
     save_image: bool
         if True, saves Pan-STARRS image as fits file
@@ -64,7 +64,7 @@ def measure_photometry(
     image = galaxy.get_image(imsize=imsize*u.arcsec, filt=filt, timeout=120)
     
     if save_image:
-        fits.HDUList([image]).writeto('galaxy.fits', overwrite=True) 
+        fits.HDUList([image]).writeto(f'galaxy_{filt}.fits', overwrite=True) 
 
     #world coordinates system, maps every x,y pixel coordinate in the image to a precise physical location on the sky
     wcs = WCS(image.header)
@@ -148,5 +148,77 @@ def measure_photometry(
 
     return mag_calibrated
 
-    
-    
+#MULTIBAND PHOTOMETRY     
+def measure_multiband_photometry(
+    ra,
+    dec,
+    imsize,
+    aper_a,
+    aper_b,
+    ann_a_in,
+    ann_a_out,
+    theta,
+    save_image=False
+):
+    '''
+    Perform elliptical aperture photometry on Pan-STARRS images in multiple filters
+
+    Parameters
+    ----------
+    ra: float
+        right ascension in degrees
+
+    dec: float
+        declination in degrees
+
+    imsize: float
+        size of image cutout in arcsec
+
+    aper_a: float
+        semimajor axis of aperture in arcsec
+
+    aper_b: float
+        semiminor axis of aperture in arcsec
+
+    ann_a_in: float
+        inner semimajor axis of annulus in arcsec
+
+    ann_a_out: float
+        outer semimajor axis of annulus in arcsec
+
+    theta: float
+        angle of ellipse from DS9 in degrees
+
+    save_image: bool
+        if True, saves Pan-STARRS images as fits file
+
+    Returns
+    -------
+    magnitudes: dict
+        calibrated magnitudes for each Pan-STARRS filter
+    '''
+
+    #usable filters
+    filters = ['g', 'r', 'i', 'z', 'y']
+
+    #dictionary of filters and their magnitudes
+    magnitudes = {}
+
+    for filt in filters:
+
+        mag = measure_photometry(
+            ra=ra,
+            dec=dec,
+            imsize=imsize,
+            aper_a=aper_a,
+            aper_b=aper_b,
+            ann_a_in=ann_a_in,
+            ann_a_out=ann_a_out,
+            theta=theta,
+            filt=filt,
+            save_image=save_image
+        )
+
+        magnitudes[filt] = mag
+
+    return magnitudes   
