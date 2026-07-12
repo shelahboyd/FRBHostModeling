@@ -68,7 +68,7 @@ def measure_photometry(
     exptime = image.header.get('EXPTIME')
 
     #zero point
-    zp = image.header.get('ZP')
+    zp = image.header.get('HIERARCH FPA.ZP')
 
 
 
