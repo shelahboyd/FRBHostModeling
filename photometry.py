@@ -110,9 +110,9 @@ def measure_photometry(
 #--------------------------------------------
     #semi major and semiminor axises for annulus
     a_out = ann_a_out
-    b_out = (b/a) *a_out
+    b_out = (b/a) *2.5*a_out
     a_in = ann_a_in
-    b_in = (b/a) * a_in
+    b_in = (b/a) *1.5*a_in
 
     #defining annulus
     annulus = SkyEllipticalAnnulus(coord, 
