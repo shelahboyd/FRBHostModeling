@@ -100,7 +100,7 @@ def image_segmentation(
     #utilzie source catalog to find properties of the galaxy on image 
     source_cat = SourceCatalog(image_sub, segment_map, convolved_data=convolved_data)
     
-    print(segment_map)
+
     
   #visualize detected sources
     if plot:
