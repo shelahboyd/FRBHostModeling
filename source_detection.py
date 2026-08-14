@@ -21,7 +21,7 @@ def image_segmentation(
     plot=True
 ):
     """
-    Performs source detection on an astronomical FITS image.
+    Subtracts background from fits file image. Performs source detection on an astronomical FITS image.
 
     Parameters
     ----------
