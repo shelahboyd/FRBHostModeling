@@ -50,7 +50,7 @@ def image_segmentation(
     """
 
     #load FITS image
-    image = fits.getdata(fits_file) #all 
+    image = fits.getdata(fits_file) 
     image = np.nan_to_num(image) #all Nan values are assigned 0. infinity points are given the highest value pixel
     print(image.shape)
 
