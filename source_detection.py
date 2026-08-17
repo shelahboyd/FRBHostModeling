@@ -16,7 +16,8 @@ def bkg_subtraction(fits_file,
                     box_size = (100,100),
                     filter_size = (3,3)
 ):
-     """
+    
+    """
     Subtracts background from fits file image.
     
      Parameters
