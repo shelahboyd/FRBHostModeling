@@ -12,44 +12,30 @@ from astropy import units as u
 import matplotlib.pyplot as plt
 
 
-def image_segmentation(
-    fits_file,
-    threshold_sigma=3,
-    n_pix=300,
-    box_size=(100,100),
-    filter_size=(3,3),
-    plot=True
+def bkg_subtraction(fits_file,
+                    box_size = (100,100),
+                    filter_size = (3,3)
 ):
-    """
-    Subtracts background from fits file image. Performs source detection on an astronomical FITS image.
-
-    Parameters
+     """
+    Subtracts background from fits file image.
+    
+     Parameters
     ----------
     fits_file : str
         Path to any FITS image.
-
-    threshold_sigma : float
-        Detection threshold in units of background RMS.
-
-    n_pix : int
-        Minimum connected pixels for detection.
 
     box_size : tuple
         Background2D mesh size.
 
     filter_size : tuple
         Background smoothing size.
-
-    plot : bool
-        Display segmentation map.
-
-    Returns
-    -------
-    segment_map : photutils.segmentation.SegmentationImage
-        Segmentation map of detected sources.
+        
+    returns:
+    ------------------------
+    image_sub = array
+        Background subtracted array image
     """
-
-    #load FITS image
+    
     image = fits.getdata(fits_file) 
     image = np.nan_to_num(image) #all Nan values are assigned 0. infinity points are given the highest value pixel
     print(image.shape)
@@ -66,7 +52,40 @@ def image_segmentation(
 
     #subtract background from image
     image_sub = image - bkg.background
+    
+    return image_sub
+    
+                        
+def image_segmentation(image_sub,
+                       threshold_sigma=3,
+                       n_pixels = 300,
+                       plot=True
+):
+    """
+    Performs source detection on an astronomical FITS image and returns optional labelled plot and source catalog.
 
+    Parameters
+    ----------
+    image_sub: array
+        Background subtracted fits file image
+
+    threshold_sigma : float
+        Detection threshold in units of background RMS.
+
+    n_pixels : int
+        Minimum connected pixels for detection.
+        
+    plot : bool
+        Display segmentation map.
+
+    Returns
+    -------
+    segment_map : photutils.segmentation.SegmentationImage
+        Segmentation map of detected sources.
+        
+    source_cat: photutils.segmentation.SourceCatalog
+        Catalog of measurements and properties of segmented sources
+    """
 
     #noise is estimated by finding the median and std of the noise pixel values
     _, median, std = sigma_clipped_stats(image_sub)
@@ -94,7 +113,7 @@ def image_segmentation(
     segment_map = detect_sources(
         convolved_data,
         threshold,
-        npixels=n_pix
+        n_pixels=n_pixels
     )
 
     #utilzie source catalog to find properties of the galaxy on image 
@@ -134,4 +153,4 @@ def image_segmentation(
         ax.set_title("Detected Sources")
         plt.show()
 
-    return segment_map, source_cat, image_sub
+    return segment_map, source_cat
